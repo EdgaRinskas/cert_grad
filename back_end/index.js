@@ -1,15 +1,25 @@
-const express = require("express");
-const cors = require("cors");
-require('dotenv').config();
 
+const express = require('express');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const { connectToDatabase } = require('./config/db');
 const app = express();
+dotenv.config();
+
+
+const PORT = process.env.PORT || 3000;
+
+
+connectToDatabase();
+
+
 app.use(cors());
-const port = process.env.PORT || 8080;
+app.use(express.json());
 
-const stone = ['travertine']
 
-app.get("/", (req, res) => {
-    res.send(stone);
+app.use('/api/users', require('./routes/userRoutes'));
+
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-
-app.listen(port, () => console.log(`Server running in port ${port}`));
